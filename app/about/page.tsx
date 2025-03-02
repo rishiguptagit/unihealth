@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+
 import { FiArrowLeft, FiSun, FiMoon } from 'react-icons/fi';
 import Link from 'next/link';
 import { useTheme } from '../components/ThemeProvider';
@@ -41,9 +41,9 @@ export default function About() {
 
           <h2 className="text-2xl font-semibold text-black dark:text-white mt-8 mb-4">Our Mission</h2>
           <p className="text-lg leading-relaxed">
-            We're on a mission to make healthcare accessible, affordable, and transparent for every student.
+            We&apos;re on a mission to make healthcare accessible, affordable, and transparent for every student.
             By leveraging AI and local healthcare partnerships, we provide personalized healthcare solutions
-            that fit students' busy lives and budgets.
+            that fit students&apos; busy lives and budgets.
           </p>
 
           <h2 className="text-2xl font-semibold text-black dark:text-white mt-8 mb-4">How We Help</h2>

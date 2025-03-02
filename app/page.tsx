@@ -38,10 +38,10 @@ export default function Home() {
             CPHealth
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl">
-            We are revolutionizing healthcare access for Cal Poly students and students across the world. Technology is the key to optimizing healthcare, and we're here to help.
+            We are revolutionizing healthcare access for Cal Poly students and students across the world. Technology is the key to optimizing healthcare, and we&apos;re here to help.
           </p>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mt-3">
-            We understand cost is a major concern - that's why we find you all available healthcare options in San Luis Obispo, provide estimated costs, and help you choose the best option for your needs. No bs, just facts.
+            We understand cost is a major concern - that&apos;s why we find you all available healthcare options in San Luis Obispo, provide estimated costs, and help you choose the best option for your needs. No bs, just facts.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl mt-12">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 hover:transform hover:scale-105">
