@@ -46,7 +46,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl mt-12">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 hover:transform hover:scale-105">
               <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">End to End Health Solution</h3>
-              <p className="text-gray-600 dark:text-gray-300">Provide a symptom, and we'll provide you optimal health care options and costs</p>
+              <p className="text-gray-600 dark:text-gray-300">Provide a symptom, and we&apos;ll provide you optimal health care options and costs</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 hover:transform hover:scale-105">
               <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Campus-Integrated Care</h3>
@@ -74,7 +74,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="absolute bottom-0 w-full py-6 bg-transparent">
         <div className="max-w-6xl mx-auto px-8 text-center text-gray-600 dark:text-gray-400">
-          <p> 2024 CPHealth Portal. All rights reserved.</p>
+          <p> 2025 CPHealth Portal. All rights reserved.</p>
         </div>
       </footer>
     </div>

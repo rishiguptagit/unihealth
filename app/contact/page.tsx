@@ -37,7 +37,7 @@ export default function Contact() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitted(true);
       setFormData({ name: '', email: '', question: '' });
-    } catch (err) {
+    } catch (_err) {
       setError('Something went wrong. Please try again.');
     }
   };
