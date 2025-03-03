@@ -32,17 +32,17 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-6"
           >
-            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm font-medium">
+            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200 text-sm font-medium">
               About
             </Link>
-            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm font-medium">
+            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200 text-sm font-medium">
               Contact
             </Link>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200"
             >
               {darkMode ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
             </motion.button>
@@ -73,7 +73,7 @@ export default function Home() {
           </motion.p>
           <div className="space-y-12">
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 text-transparent bg-clip-text mb-8">Have Symptoms? Get help now.</h3>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#154734] to-[#2a724f] dark:from-[#2a724f] dark:to-[#3d8b64] text-transparent bg-clip-text mb-8">Have Symptoms? Get help now.</h3>
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-5xl">
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -84,8 +84,8 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300">Enter your symptom into our AI system. Hard to describe them? Tell our AI system.</p>
                 </motion.div>
                 <div className="flex items-center justify-center">
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 hidden md:block" />
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 rotate-90 md:hidden" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] hidden md:block" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90 md:hidden" />
                 </div>
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -96,8 +96,8 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300">Based on your symptoms, location, and insurance, we provide you options. We understand you're in the dorms and getting to the health clinic 10 miles away isn't easy. It's all factored in. We understand you may not be able to afford the best clinic, we will give you all the options with all the prices.</p>
                 </motion.div>
                 <div className="flex items-center justify-center">
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 hidden md:block" />
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 rotate-90 md:hidden" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] hidden md:block" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90 md:hidden" />
                 </div>
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -111,7 +111,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 text-transparent bg-clip-text mb-8">Know you want to go to the Cal Poly health center?</h3>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#154734] to-[#2a724f] dark:from-[#2a724f] dark:to-[#3d8b64] text-transparent bg-clip-text mb-8">Know you want to go to the Cal Poly health center?</h3>
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-5xl">
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -122,8 +122,8 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300">Tired of making appointments on the old Cal Poly Health and counseling website? Use CPHealth's modern system.</p>
                 </motion.div>
                 <div className="flex items-center justify-center">
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 hidden md:block" />
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 rotate-90 md:hidden" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] hidden md:block" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90 md:hidden" />
                 </div>
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -134,8 +134,8 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300">Someone cancelled an appointment or didn't show up? Get an alert to be the next one to get help.</p>
                 </motion.div>
                 <div className="flex items-center justify-center">
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 hidden md:block" />
-                  <FiArrowRight className="w-8 h-8 text-blue-500 dark:text-blue-400 rotate-90 md:hidden" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] hidden md:block" />
+                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90 md:hidden" />
                 </div>
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -156,7 +156,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8 }}
             onClick={() => window.open('https://forms.gle/gZzn7yWxeodzQtFy7', '_blank')}
-            className="mt-16 inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-500 dark:to-blue-400 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 shadow-lg group relative overflow-hidden"
+            className="mt-16 inline-flex items-center space-x-3 bg-gradient-to-r from-[#154734] to-[#2a724f] dark:from-[#2a724f] dark:to-[#3d8b64] text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 shadow-lg group relative overflow-hidden hover:from-[#1d5b44] hover:to-[#154734] dark:hover:from-[#3d8b64] dark:hover:to-[#2a724f]"
           >
             <span>Get Started</span>
             <FiArrowRight className="w-5 h-5 group-hover:transform group-hover:translate-x-1 transition-transform" />
