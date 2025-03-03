@@ -11,22 +11,20 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <nav className="bg-transparent py-6 w-full">
-        <div className="flex justify-between items-center">
+        <div className="max-w-4xl mx-auto px-8 flex justify-between items-center">
           <Link 
             href="/" 
-            className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-lg font-medium ml-6 group"
+            className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-lg font-medium group"
           >
             <FiArrowLeft className="w-5 h-5 mr-2 group-hover:transform group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
-          <div className="mr-8">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
-            >
-              {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
-            </button>
-          </div>
+          <button
+            onClick={toggleDarkMode}
+            className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
+          >
+            {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+          </button>
         </div>
       </nav>
       <main className="max-w-4xl mx-auto px-8 py-16">
