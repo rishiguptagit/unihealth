@@ -5,40 +5,24 @@ import Link from 'next/link';
 import { useTheme } from './components/ThemeProvider';
 import { motion } from 'framer-motion';
 
-  /**
-   * The home page of CPHealth.
-   *
-   * This page serves as the landing page for CPHealth. It displays a navigation bar at the top
-   * with links to the about and contact pages. Below the navigation bar is a hero section with
-   * a brief description of CPHealth and a call to action to sign up for the service. The hero
-   * section also includes a button to toggle the dark mode of the application.
-   *
-   * Below the hero section is a section that explains how CPHealth works. This section is divided
-   * into two columns: one for students and one for the CP Health Center. The student column
-   * explains how students can use CPHealth to find healthcare providers and book appointments.
-   * The CP Health Center column explains how the CP Health Center can use CPHealth to manage
-   * patient requests and schedule appointments.
-   *
-   * The page ends with a footer that displays the copyright information for CPHealth.
-   */
 export default function Home() {
   const { darkMode, toggleDarkMode } = useTheme();
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${darkMode ? 'dark bg-gradient-to-b from-gray-900 to-gray-800' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
       {/* Navigation Bar */}
       <motion.nav 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-transparent py-6 w-full"
+        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
       >
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-8">
+        <div className="flex justify-between items-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-3xl font-bold text-black dark:text-white"
+            className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 text-transparent bg-clip-text"
           >
             CPHealth
           </motion.h1>
@@ -46,21 +30,21 @@ export default function Home() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center gap-8"
+            className="flex items-center gap-6"
           >
-            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-lg font-medium">
+            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm font-medium">
               About
             </Link>
-            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-lg font-medium">
+            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm font-medium">
               Contact
             </Link>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
+              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
             >
-              {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+              {darkMode ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
             </motion.button>
           </motion.div>
         </div>
@@ -89,7 +73,7 @@ export default function Home() {
           </motion.p>
           <div className="space-y-12">
             <div className="flex flex-col items-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Have Symptoms? Get help now.</h2>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 text-transparent bg-clip-text mb-8">Have Symptoms? Get help now.</h3>
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-5xl">
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -121,13 +105,13 @@ export default function Home() {
                   className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 flex-1"
                 >
                   <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Book Appointment</h3>
-                  <p className="text-gray-600 dark:text-gray-300">Get help with just a few clicks. </p>
+                  <p className="text-gray-600 dark:text-gray-300">Get help with just a few clicks. Be it the health center, or the clinic down the road. We will book you with the most optimal provider based on your circumstances. </p>
                 </motion.div>
               </div>
             </div>
 
             <div className="flex flex-col items-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Know you want to go to the Cal Poly health center?</h2>
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 text-transparent bg-clip-text mb-8">Know you want to go to the Cal Poly health center?</h3>
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-5xl">
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
@@ -166,13 +150,13 @@ export default function Home() {
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8 }}
             onClick={() => window.open('https://forms.gle/gZzn7yWxeodzQtFy7', '_blank')}
-            className="mt-12 inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl group"
+            className="mt-16 inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-500 dark:to-blue-400 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 shadow-lg group relative overflow-hidden"
           >
             <span>Get Started</span>
             <FiArrowRight className="w-5 h-5 group-hover:transform group-hover:translate-x-1 transition-transform" />
@@ -181,9 +165,9 @@ export default function Home() {
       </motion.main>
 
       {/* Footer */}
-      <footer className="w-full py-6 mt-auto bg-transparent">
-        <div className="max-w-6xl mx-auto px-8 text-center text-gray-600 dark:text-gray-400">
-          <p>&copy; 2025 CPHealth Portal. All rights reserved.</p>
+      <footer className="w-full py-6 mt-auto border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 CPHealth Portal. All rights reserved.</p>
         </div>
       </footer>
     </div>
