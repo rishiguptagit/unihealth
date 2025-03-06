@@ -1,13 +1,88 @@
 "use client";
 
-import { FiSun, FiMoon, FiArrowRight } from 'react-icons/fi';
+import { FiSun, FiMoon } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from './components/ThemeProvider';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const { darkMode, toggleDarkMode } = useTheme();
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
+
+
+  const studentProfiles = [
+    { src: "/images/student1.jpg", alt: "Female student with headache" },
+    { src: "/images/student2.jpg", alt: "Student dealing with stress" },
+    { src: "/images/student3.jpg", alt: "Student athlete with injury" },
+    { src: "/images/student4.jpg", alt: "Student needing prescription" },
+    { src: "/images/student5.jpg", alt: "Student with allergies" }
+  ];
+
+  const chatExamples = [
+    {
+      userMessage: "Hi, I've been having a persistent headache and fever (101°F) for the past 2 days. I've tried taking Tylenol but the symptoms keep coming back. Should I be concerned?",
+      aiResponse: "Given your symptoms and their persistence, it would be best to get checked by a healthcare provider. Here are the earliest available appointments nearby:",
+      options: [
+        { name: "University Health Center", distance: "0.3", cost: "$20-35", extra: "Next available: Today at 2:45 PM", time: "2:45 PM" },
+        { name: "Student Urgent Care", distance: "1.2", cost: "$35-50", extra: "Walk-in: Current wait 15 mins", time: "Now" },
+        { name: "Campus Medical Clinic", distance: "0.8", cost: "$25-40", extra: "Next available: Today at 3:30 PM", time: "3:30 PM" }
+      ]
+    },
+    {
+      userMessage: "I've been feeling really anxious about my upcoming exams and having trouble sleeping. What resources are available?",
+      aiResponse: "I understand exam stress can be challenging. Here are the earliest counseling appointments available:",
+      options: [
+        { name: "Student Counseling Center", distance: "0.1", cost: "Free", extra: "Next available: Today at 4:15 PM", time: "4:15 PM" },
+        { name: "Wellness Center - Stress Management", distance: "0.5", cost: "Free", extra: "Group session starts at 5:00 PM", time: "5:00 PM" },
+        { name: "Mental Health Support Line", distance: "Remote", cost: "Free", extra: "Available 24/7 - No wait time", time: "Now" }
+      ]
+    },
+    {
+      userMessage: "I think I sprained my ankle during intramural sports. It's swollen and hurts to walk. Where can I get it checked?",
+      aiResponse: "A sprained ankle should be evaluated promptly. Here are the soonest available appointments for sports injuries:",
+      options: [
+        { name: "Sports Medicine Clinic", distance: "0.4", cost: "$25-40", extra: "Next available: Today at 1:30 PM", time: "1:30 PM" },
+        { name: "Physical Therapy Center", distance: "0.8", cost: "$30-45", extra: "Walk-in: Current wait 20 mins", time: "Now" },
+        { name: "University Athletic Trainer", distance: "0.2", cost: "$20-35", extra: "Next available: Today at 2:00 PM", time: "2:00 PM" }
+      ]
+    },
+    {
+      userMessage: "I need to refill my prescription medication but the pharmacy is closed. What should I do?",
+      aiResponse: "Don't worry, here are the nearest pharmacies that can help you right now:",
+      options: [
+        { name: "Campus Corner Pharmacy", distance: "0.2", cost: "$10-30", extra: "Open now - No wait time", time: "Now" },
+        { name: "University Medical Center Pharmacy", distance: "0.6", cost: "$10-30", extra: "Open 24/7 - 5 min wait", time: "5 mins" },
+        { name: "Student Health Pharmacy", distance: "0.4", cost: "$10-30", extra: "Opens at 3:00 PM", time: "3:00 PM" }
+      ]
+    },
+    {
+      userMessage: "I have seasonal allergies and they're getting worse. Where can I get tested and treated?",
+      aiResponse: "Allergy testing and treatment are available at these locations. Here are the earliest appointments:",
+      options: [
+        { name: "Student Health Allergy Clinic", distance: "0.3", cost: "$30-45", extra: "Next available: Today at 3:45 PM", time: "3:45 PM" },
+        { name: "Allergy & Asthma Center", distance: "1.0", cost: "$40-55", extra: "Next available: Today at 2:15 PM", time: "2:15 PM" },
+        { name: "University Medical Group", distance: "0.7", cost: "$35-50", extra: "Walk-in: Current wait 30 mins", time: "Now" }
+      ]
+    }
+  ];
+
+  // Save and load theme preference from local storage
+  useEffect(() => {
+    // Save current theme preference whenever it changes
+    localStorage.setItem('unihealth-theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentExampleIndex((prev) => (prev + 1) % chatExamples.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-200 ${darkMode ? 'dark bg-gradient-to-b from-gray-900 to-gray-800' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
@@ -63,103 +138,219 @@ export default function Home() {
         </div>
       </motion.nav>
 
-      {/* Hero Section */}
-      <motion.main 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-        className="flex-grow max-w-6xl mx-auto px-8 py-12 overflow-x-hidden"
-      >
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="flex flex-col space-y-8"
-        >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7 }}
-            className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 w-full text-center mb-8"
+      {/* Split Screen */}
+      <div className="flex-grow flex">
+        {/* Left Half */}
+        <div className="w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-md space-y-8"
           >
-            Hi University students. We know it's hard to get to the doctor. That's where UniHealth comes in.
-          </motion.p>
-          <div className="flex items-start gap-8 px-4">
-            {/* Left side - Flowchart */}
-            <div className="flex flex-col items-start flex-shrink-0">
-
-              <div className="flex flex-col items-start gap-4">
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 w-[300px]"
-                >
-                  <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Share Symptoms</h3>
-                  <p className="text-gray-600 dark:text-gray-300">Enter your symptom into our AI system. Hard to describe them? Tell our AI system.</p>
-                </motion.div>
-                <div className="flex items-center justify-center w-full">
-                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90" />
-                </div>
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 w-[300px]"
-                >
-                  <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Get Options</h3>
-                  <p className="text-gray-600 dark:text-gray-300">Based on your symptoms, location, and insurance, we provide you options. We understand you're in the dorms and getting to the health clinic 10 miles away isn't easy. It's all factored in. We understand you may not be able to afford the best clinic, we will give you all the options with all the prices.</p>
-                </motion.div>
-                <div className="flex items-center justify-center w-full">
-                  <FiArrowRight className="w-8 h-8 text-[#154734] dark:text-[#2a724f] rotate-90" />
-                </div>
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-all duration-200 w-[300px]"
-                >
-                  <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">Book Appointment</h3>
-                  <p className="text-gray-600 dark:text-gray-300">Get help with just a few clicks. Be it the health center, or the clinic down the road. We will book you with the most optimal provider based on your circumstances. </p>
-                </motion.div>
-              </div>
+            <div className="text-center">
+              <motion.h2 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight"
+              >
+                Your health, in your hands
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+              >
+                Health-first AI made just for university students
+              </motion.p>
             </div>
-
-            {/* Right side - Image */}
-            <motion.div
+            
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.7 }}
-              className="relative w-[600px] h-[600px] flex-shrink-0 mt-8 ml-8"
-            >
-              <Image
-                src="/images/example.png"
-                alt="Example Image"
-                fill
-                className="object-scale-down rounded-lg"
-                priority
-              />
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-3 mt-8"
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    // Clear error when user types
+                    if (emailError) setEmailError('');
+                  }}
+                  placeholder="Enter your personal email"
+                  className={`w-full px-4 py-3 rounded-xl border-2 ${emailError ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154734] dark:focus:ring-[#2a724f] focus:border-transparent transition-all duration-200`}
+                />
+                {emailError && (
+                  <p className="text-sm text-red-500 dark:text-red-400 mt-1">{emailError}</p>
+                )}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={async () => {
+                    // Clear any previous error
+                    setEmailError('');
+                    
+                    // Basic email validation
+                    if (!email.trim()) {
+                      setEmailError('Email is required');
+                      return;
+                    }
+                    
+                    // Regex for email validation
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailRegex.test(email)) {
+                      setEmailError('Please enter a valid email address');
+                      return;
+                    }
+                    
+                    try {
+                      setIsSubmitting(true);
+                      
+                      // Save email to local storage
+                      localStorage.setItem('unihealth-email', email);
+                      
+                      // Simulate API call
+                      await new Promise(resolve => setTimeout(resolve, 1000));
+                      
+                      // Redirect to info page
+                      window.location.href = '/info';
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                  disabled={isSubmitting || !email.trim()}
+                  className="w-full py-3 bg-[#154734] dark:bg-[#2a724f] text-white rounded-xl hover:bg-[#1d5f45] dark:hover:bg-[#358f63] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                >
+                  {isSubmitting ? 'Continuing...' : 'Continue'}
+                </motion.button>
+              </motion.div>
             </motion.div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7 }}
-            onClick={() => window.open('https://forms.gle/gZzn7yWxeodzQtFy7', '_blank')}
-            className="mt-8 inline-flex items-center space-x-3 bg-gradient-to-r from-[#154734] to-[#2a724f] dark:from-[#2a724f] dark:to-[#3d8b64] text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 shadow-lg group relative overflow-hidden hover:from-[#1d5b44] hover:to-[#154734] dark:hover:from-[#3d8b64] dark:hover:to-[#2a724f]"
-          >
-            <span>Get Started</span>
-            <FiArrowRight className="w-5 h-5 group-hover:transform group-hover:translate-x-1 transition-transform" />
-          </motion.button>
-        </motion.div>
-      </motion.main>
-
-      {/* Footer */}
-      <footer className="w-full py-6 mt-auto border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 UniHealth. All rights reserved.</p>
+          </motion.div>
         </div>
-      </footer>
+        
+        {/* Right Half - Chat Example */}
+        <div className="w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
+          >
+            <div className="p-6 space-y-4">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentExampleIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-4"
+                >
+                  {/* User Message */}
+                  <div className="flex gap-3">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 ring-2 ring-[#154734]/20 dark:ring-[#2a724f]/20 shadow-lg">
+                      <Image
+                        src={studentProfiles[currentExampleIndex].src}
+                        alt={studentProfiles[currentExampleIndex].alt}
+                        width={48}
+                        height={48}
+                        className="object-cover w-full h-full hover:opacity-90 transition-opacity duration-200"
+                        priority
+                      />
+                    </motion.div>
+                    <div className="flex-1 bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-4 relative before:absolute before:w-2 before:h-2 before:bg-blue-50 dark:before:bg-blue-900/30 before:-left-1 before:top-4 before:rotate-45">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
+                      <p className="text-gray-800 dark:text-gray-200">{chatExamples[currentExampleIndex].userMessage}</p>
+                    </div>
+                  </div>
+
+                  {/* AI Response */}
+                  <div className="flex gap-3 flex-row-reverse">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      className="flex-shrink-0 w-12 h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-lg ring-2 ring-gray-100 dark:ring-gray-700">
+                      <Image
+                        src="/images/logo.png"
+                        alt="UniHealth AI"
+                        width={28}
+                        height={28}
+                        className="object-contain"
+                        priority
+                      />
+                    </motion.div>
+                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 relative before:absolute before:w-2 before:h-2 before:bg-gray-50 dark:before:bg-gray-800/50 before:-right-1 before:top-4 before:rotate-45">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
+                      <p className="text-gray-800 dark:text-gray-200 mb-3">{chatExamples[currentExampleIndex].aiResponse}</p>
+                      <div className="space-y-2">
+                        {chatExamples[currentExampleIndex].options.map((option, index) => (
+                          <motion.div 
+                            key={index} 
+                            whileHover={{ scale: 1.02 }}
+                            className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
+                          >
+                            {typeof option.time === 'string' && option.time === 'Now' && (
+                              <div className="absolute right-0 top-0 px-3 py-1 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
+                                <p className="text-sm font-medium">
+                                  <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
+                                    <span className="relative flex h-2 w-2">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </span>
+                                    Available Now
+                                  </span>
+                                </p>
+                              </div>
+                            )}
+                            <div className="pr-6">
+                              <p className="font-medium text-gray-900 dark:text-white">{option.name}</p>
+                              <div className="flex flex-col gap-2 mt-2">
+                                <div className="flex items-center gap-4 text-sm">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
+                                    <span className="text-gray-600 dark:text-gray-400">{option.distance} miles</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400"></span>
+                                    <span className="font-medium text-gray-900 dark:text-white">{option.cost}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className={`w-1.5 h-1.5 rounded-full ${typeof option.time === 'string' && option.time === 'Now' ? 'bg-green-500 dark:bg-green-400' : 'bg-blue-500 dark:bg-blue-400'}`}></div>
+                                  <p className="text-sm text-gray-700 dark:text-gray-300">{option.extra}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Progress Indicators */}
+              <div className="flex justify-center gap-2 mt-4">
+                {chatExamples.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${index === currentExampleIndex ? 'w-6 bg-gray-800 dark:bg-gray-200' : 'w-2 bg-gray-300 dark:bg-gray-600'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 }
