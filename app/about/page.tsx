@@ -30,10 +30,10 @@ export default function About() {
       <main className="max-w-4xl mx-auto px-8 py-16">
         {/* About Content */}
         <div className="space-y-8 text-gray-600 dark:text-gray-300">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-6">About CPHealth</h1>
+          <h1 className="text-4xl font-bold text-black dark:text-white mb-6">About UniHealth</h1>
           
           <p className="text-lg leading-relaxed">
-            CPHealth is a concept that was born out of BUS 310 at Cal Poly, San Luis Obispo. Our journey began at Cal Poly, where we witnessed firsthand the challenges students face in 
+            UniHealth is a concept that was born out of BUS 310 at Cal Poly, San Luis Obispo. Our journey began at Cal Poly, where we witnessed firsthand the challenges students face in 
             accessing and affording healthcare. We want to solve this problem through technology and innovation.
           </p>
 

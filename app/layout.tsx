@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CPHealth",
+  title: "UniHealth",
   description: "Student Health Portal",
+  icons: {
+    icon: "/images/logo.png"
+  }
 };
 
 export default function RootLayout({
