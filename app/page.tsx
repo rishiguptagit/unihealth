@@ -91,9 +91,9 @@ export default function Home() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
+        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 sm:py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
       >
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -139,9 +139,9 @@ export default function Home() {
       </motion.nav>
 
       {/* Split Screen */}
-      <div className="flex-grow flex">
+      <div className="flex-grow flex flex-col md:flex-row">
         {/* Left Half */}
-        <div className="w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-8">
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-4 sm:p-6 md:p-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,7 +153,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight px-4 sm:px-0"
               >
                 Your health, in your hands
               </motion.h2>
@@ -161,7 +161,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+                className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0"
               >
                 Health-first AI made just for university students
               </motion.p>
@@ -175,7 +175,7 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-3 mt-8"
+                className="space-y-3 mt-6 sm:mt-8 px-4 sm:px-0"
               >
                 <input
                   type="email"
@@ -237,14 +237,14 @@ export default function Home() {
         </div>
         
         {/* Right Half - Chat Example */}
-        <div className="w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-8">
+        <div className="w-full md:w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-4 sm:p-6 md:p-8 mt-4 md:mt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
+            className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden mx-2 sm:mx-4 md:mx-0"
           >
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentExampleIndex}
@@ -252,13 +252,13 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="space-y-4"
+                  className="space-y-3 sm:space-y-4 mx-0 sm:mx-2"
                 >
                   {/* User Message */}
                   <div className="flex gap-3">
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 ring-2 ring-[#154734]/20 dark:ring-[#2a724f]/20 shadow-lg">
+                      className="flex-shrink-0 w-10 sm:w-12 h-10 sm:h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 ring-2 ring-[#154734]/20 dark:ring-[#2a724f]/20 shadow-lg">
                       <Image
                         src={studentProfiles[currentExampleIndex].src}
                         alt={studentProfiles[currentExampleIndex].alt}
@@ -268,7 +268,7 @@ export default function Home() {
                         priority
                       />
                     </motion.div>
-                    <div className="flex-1 bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-4 relative before:absolute before:w-2 before:h-2 before:bg-blue-50 dark:before:bg-blue-900/30 before:-left-1 before:top-4 before:rotate-45">
+                    <div className="flex-1 bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-3 sm:p-4 relative before:absolute before:w-2 before:h-2 before:bg-blue-50 dark:before:bg-blue-900/30 before:-left-1 before:top-4 before:rotate-45">
                       <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
                       <p className="text-gray-800 dark:text-gray-200">{chatExamples[currentExampleIndex].userMessage}</p>
                     </div>
@@ -278,17 +278,17 @@ export default function Home() {
                   <div className="flex gap-3 flex-row-reverse">
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className="flex-shrink-0 w-12 h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-lg ring-2 ring-gray-100 dark:ring-gray-700">
+                      className="flex-shrink-0 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-lg ring-2 ring-gray-100 dark:ring-gray-700">
                       <Image
                         src="/images/logo.png"
                         alt="UniHealth AI"
-                        width={28}
-                        height={28}
-                        className="object-contain"
+                        width={24}
+                        height={24}
+                        className="object-contain sm:w-7 sm:h-7"
                         priority
                       />
                     </motion.div>
-                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 relative before:absolute before:w-2 before:h-2 before:bg-gray-50 dark:before:bg-gray-800/50 before:-right-1 before:top-4 before:rotate-45">
+                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-3 sm:p-4 relative before:absolute before:w-2 before:h-2 before:bg-gray-50 dark:before:bg-gray-800/50 before:-right-1 before:top-4 before:rotate-45">
                       <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
                       <p className="text-gray-800 dark:text-gray-200 mb-3">{chatExamples[currentExampleIndex].aiResponse}</p>
                       <div className="space-y-2">
@@ -296,10 +296,10 @@ export default function Home() {
                           <motion.div 
                             key={index} 
                             whileHover={{ scale: 1.02 }}
-                            className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
+                            className="bg-white dark:bg-gray-800 rounded-xl p-2.5 sm:p-3 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
                           >
                             {typeof option.time === 'string' && option.time === 'Now' && (
-                              <div className="absolute right-0 top-0 px-3 py-1 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
+                              <div className="absolute right-0 top-0 px-2 sm:px-3 py-1 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
                                 <p className="text-sm font-medium">
                                   <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
                                     <span className="relative flex h-2 w-2">
@@ -311,10 +311,10 @@ export default function Home() {
                                 </p>
                               </div>
                             )}
-                            <div className="pr-6">
-                              <p className="font-medium text-gray-900 dark:text-white">{option.name}</p>
+                            <div className="pr-4 sm:pr-6">
+                              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{option.name}</p>
                               <div className="flex flex-col gap-2 mt-2">
-                                <div className="flex items-center gap-4 text-sm">
+                                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
                                   <div className="flex items-center gap-1.5">
                                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
                                     <span className="text-gray-600 dark:text-gray-400">{option.distance} miles</span>

@@ -224,9 +224,9 @@ export default function InfoPage() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
+        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 sm:py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
       >
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -243,7 +243,7 @@ export default function InfoPage() {
                 priority
               />
             </div>
-            <h1 className="text-2xl font-bold text-black dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
               UniHealth
             </h1>
           </motion.div>
@@ -272,14 +272,14 @@ export default function InfoPage() {
       </motion.nav>
 
       {/* Main Content */}
-      <div className="flex-grow flex flex-col items-center justify-center p-8">
+      <div className="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8"
+          className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-6 md:p-8"
         >
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <Link href="/">
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -289,12 +289,12 @@ export default function InfoPage() {
                 <FiArrowLeft className="w-5 h-5" />
               </motion.div>
             </Link>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Your Information</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Your Information</h2>
           </div>
           
           <div className="space-y-6">
             {/* Insurance Provider Selection */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl relative">
+            <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-xl relative">
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Insurance Provider</p>
               <div className="relative" ref={providerDropdownRef}>
                 <input
@@ -334,7 +334,7 @@ export default function InfoPage() {
             
             {/* Insurance Plan Selection - Only shown when provider is selected */}
             {insurance && (
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl relative mt-4">
+              <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-xl relative mt-4">
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Insurance Plan</p>
                 <div className="relative" ref={planDropdownRef}>
                   <input
@@ -350,14 +350,14 @@ export default function InfoPage() {
                     setFilteredPlans(availablePlans); // Show all options when focused
                   }}
                     placeholder="Type or select your specific plan"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154734] dark:focus:ring-[#2a724f] focus:border-transparent transition-all duration-200"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm sm:text-base placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154734] dark:focus:ring-[#2a724f] focus:border-transparent transition-all duration-200"
                   />
                   {showPlanDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg max-h-60 overflow-y-auto">
+                    <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg max-h-48 sm:max-h-60 overflow-y-auto text-sm sm:text-base">
                       {filteredPlans.map((plan, index) => (
                         <div
                           key={index}
-                          className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-800 dark:text-gray-200"
+                          className="px-3 sm:px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-800 dark:text-gray-200"
                           onClick={() => {
                             setInsurancePlan(plan);
                             setShowPlanDropdown(false);
