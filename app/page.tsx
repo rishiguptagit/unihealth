@@ -29,8 +29,9 @@ export default function Home() {
               <Image
                 src="/images/logo.png"
                 alt="UniHealth Logo"
-                fill
-                className="object-contain"
+                width={32}
+                height={32}
+                className="object-contain w-full h-full"
                 priority
               />
             </div>
