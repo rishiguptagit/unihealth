@@ -11,34 +11,46 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  // Initialize theme once mounted
   useEffect(() => {
-    // Check for the new key first, then fall back to the old key for backward compatibility
+    setMounted(true);
     const savedTheme = localStorage.getItem('unihealth-theme');
-    const savedDarkMode = localStorage.getItem('darkMode');
-    
     if (savedTheme !== null) {
-      // Use the new key format
       setDarkMode(savedTheme === 'dark');
-    } else if (savedDarkMode !== null) {
-      // Fall back to the old key format
-      setDarkMode(savedDarkMode === 'true');
     } else {
-      // Set default if neither exists
-      localStorage.setItem('unihealth-theme', 'light');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(systemDark);
     }
   }, []);
 
+  // Listen for system theme changes
   useEffect(() => {
+    if (!mounted) return;
+    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (localStorage.getItem('unihealth-theme') === null) {
+        setDarkMode(e.matches);
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [mounted]);
+
+  // Update document class and localStorage when theme changes
+  useEffect(() => {
+    if (!mounted) return;
+
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    // Update both storage keys for compatibility
     localStorage.setItem('unihealth-theme', darkMode ? 'dark' : 'light');
-    localStorage.setItem('darkMode', darkMode.toString());
-  }, [darkMode]);
+  }, [darkMode, mounted]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -46,7 +58,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
-      {children}
+      {mounted ? children : null}
     </ThemeContext.Provider>
   );
 }

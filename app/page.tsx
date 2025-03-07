@@ -244,7 +244,39 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden mx-2 sm:mx-4 md:mx-0"
           >
-            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 relative">
+              {/* Navigation Controls */}
+              <div className="absolute top-1/2 -translate-y-1/2 -left-1 sm:-left-2 -right-1 sm:-right-2 flex justify-between pointer-events-none z-10">
+                <button
+                  onClick={() => setCurrentExampleIndex((prev) => (prev === 0 ? chatExamples.length - 1 : prev - 1))}
+                  className="p-1.5 pointer-events-auto hover:scale-110 transition-transform duration-200"
+                  aria-label="Previous example"
+                >
+                  <svg className="w-6 h-6 text-gray-800/90 dark:text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrentExampleIndex((prev) => (prev === chatExamples.length - 1 ? 0 : prev + 1))}
+                  className="p-1.5 pointer-events-auto hover:scale-110 transition-transform duration-200"
+                  aria-label="Next example"
+                >
+                  <svg className="w-6 h-6 text-gray-800/90 dark:text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+              {/* Navigation Dots */}
+              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
+                {chatExamples.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentExampleIndex(index)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${index === currentExampleIndex ? 'bg-green-500 scale-125' : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'}`}
+                    aria-label={`View example ${index + 1}`}
+                  />
+                ))}
+              </div>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentExampleIndex}
@@ -299,12 +331,12 @@ export default function Home() {
                             className="bg-white dark:bg-gray-800 rounded-xl p-2.5 sm:p-3 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
                           >
                             {typeof option.time === 'string' && option.time === 'Now' && (
-                              <div className="absolute right-0 top-0 px-2 sm:px-3 py-1 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
-                                <p className="text-sm font-medium">
-                                  <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
-                                    <span className="relative flex h-2 w-2">
+                              <div className="absolute right-0 top-0 px-0.5 sm:px-1 py-0.5 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
+                                <p className="text-[9px] sm:text-[10px] font-medium">
+                                  <span className="text-green-600 dark:text-green-400 flex items-center gap-0.5">
+                                    <span className="relative flex h-0.5 w-0.5 sm:h-1 sm:w-1">
                                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                      <span className="relative inline-flex rounded-full h-0.5 w-0.5 sm:h-1 sm:w-1 bg-green-500"></span>
                                     </span>
                                     Available Now
                                   </span>
