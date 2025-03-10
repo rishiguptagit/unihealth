@@ -98,20 +98,23 @@ export default function Home() {
       localStorage.setItem('unihealth-email', email);
 
       const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Failed to check email');
+      }
 
-      if (response.ok) {
-        if (data.exists) {
-          router.push('/poc');
-        } else {
-          router.push('/form');
-        }
+      const data = await response.json();
+      setIsSubmitting(false);
+
+      if (data.exists) {
+        // If email exists, redirect to POC page
+        router.push('/poc');
       } else {
-        setEmailError('Failed to check email. Please try again.');
+        // If email doesn't exist, redirect to form page with email as query param
+        router.push(`/form?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
+      console.error('Error checking email:', error);
       setEmailError('An error occurred. Please try again.');
-    } finally {
       setIsSubmitting(false);
     }
   };

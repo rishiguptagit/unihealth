@@ -22,12 +22,16 @@ export async function POST(request: Request) {
     await createFormSubmissionsTable();
 
     // Save the form submission
-    await saveFormSubmission({
+    const success = await saveFormSubmission({
       email,
       interestedInBeta,
       features,
       otherFeature
     });
+
+    if (!success) {
+      throw new Error('Failed to save form submission');
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -29,7 +29,11 @@ export default function Form() {
     if (!email) {
       // If no email is provided, redirect back to home page
       router.push('/');
+      return;
     }
+
+    // Store email in local storage
+    localStorage.setItem('unihealth-email', email);
   }, [searchParams, router]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
