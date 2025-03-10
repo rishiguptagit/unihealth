@@ -5,9 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from './components/ThemeProvider';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+
   const { darkMode, toggleDarkMode } = useTheme();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -71,6 +74,50 @@ export default function Home() {
     }
   ];
 
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError('');
+
+    // Basic email validation
+    if (!email.trim()) {
+      setEmailError('Email is required');
+      return;
+    }
+
+    // Regex for email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Save email to local storage
+      localStorage.setItem('unihealth-email', email);
+
+      const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.exists) {
+          router.push('/poc');
+        } else {
+          router.push('/form');
+        }
+      } else {
+        setEmailError('Failed to check email. Please try again.');
+      }
+    } catch (error) {
+      setEmailError('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
+
   // Save and load theme preference from local storage
   useEffect(() => {
     // Save current theme preference whenever it changes
@@ -80,7 +127,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentExampleIndex((prev) => (prev + 1) % chatExamples.length);
-    }, 8000);
+    }, 40000);
     return () => clearInterval(timer);
   }, []);
 
@@ -91,9 +138,9 @@ export default function Home() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 sm:py-4 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
+        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-2 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
       >
-        <div className="flex justify-between items-center max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center max-w-6xl mx-auto px-3 sm:px-4">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -141,19 +188,19 @@ export default function Home() {
       {/* Split Screen */}
       <div className="flex-grow flex flex-col md:flex-row">
         {/* Left Half */}
-        <div className="w-full md:w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-4 sm:p-6 md:p-8">
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-3 sm:p-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-md space-y-8"
+            className="w-full max-w-md space-y-4"
           >
             <div className="text-center">
               <motion.h2 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight px-4 sm:px-0"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight px-4 sm:px-0"
               >
                 Your health, in your hands
               </motion.h2>
@@ -161,7 +208,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0"
+                className="mt-2 sm:mt-3 text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0"
               >
                 Health-first AI made just for university students
               </motion.p>
@@ -172,10 +219,11 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
               className="space-y-4">
-              <motion.div
+              <motion.form
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-3 mt-6 sm:mt-8 px-4 sm:px-0"
+                onSubmit={handleEmailSubmit}
               >
                 <input
                   type="email"
@@ -192,59 +240,28 @@ export default function Home() {
                   <p className="text-sm text-red-500 dark:text-red-400 mt-1">{emailError}</p>
                 )}
                 <motion.button
+                  type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={async () => {
-                    // Clear any previous error
-                    setEmailError('');
-                    
-                    // Basic email validation
-                    if (!email.trim()) {
-                      setEmailError('Email is required');
-                      return;
-                    }
-                    
-                    // Regex for email validation
-                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    if (!emailRegex.test(email)) {
-                      setEmailError('Please enter a valid email address');
-                      return;
-                    }
-                    
-                    try {
-                      setIsSubmitting(true);
-                      
-                      // Save email to local storage
-                      localStorage.setItem('unihealth-email', email);
-                      
-                      // Simulate API call
-                      await new Promise(resolve => setTimeout(resolve, 1000));
-                      
-                      // Redirect to info page
-                      window.location.href = '/info';
-                    } finally {
-                      setIsSubmitting(false);
-                    }
-                  }}
                   disabled={isSubmitting || !email.trim()}
                   className="w-full py-3 bg-[#154734] dark:bg-[#2a724f] text-white rounded-xl hover:bg-[#1d5f45] dark:hover:bg-[#358f63] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
-                  {isSubmitting ? 'Continuing...' : 'Continue'}
+                  {isSubmitting ? 'Checking...' : 'Continue'}
                 </motion.button>
-              </motion.div>
+              </motion.form>
             </motion.div>
           </motion.div>
         </div>
         
         {/* Right Half - Chat Example */}
-        <div className="w-full md:w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-4 sm:p-6 md:p-8 mt-4 md:mt-0">
+        <div className="w-full md:w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-3 sm:p-4 mt-4 md:mt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden mx-2 sm:mx-4 md:mx-0"
+            className="w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden mx-2 sm:mx-4 md:mx-0"
           >
-            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 relative">
+            <div className="p-2 sm:p-2.5 space-y-1.5 relative">
               {/* Navigation Controls */}
               <div className="absolute top-1/2 -translate-y-1/2 -left-1 sm:-left-2 -right-1 sm:-right-2 flex justify-between pointer-events-none z-10">
                 <button
@@ -284,13 +301,13 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="space-y-3 sm:space-y-4 mx-0 sm:mx-2"
+                  className="space-y-2 mx-0 sm:mx-2"
                 >
                   {/* User Message */}
                   <div className="flex gap-3">
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className="flex-shrink-0 w-10 sm:w-12 h-10 sm:h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 ring-2 ring-[#154734]/20 dark:ring-[#2a724f]/20 shadow-lg">
+                      className="flex-shrink-0 w-7 sm:w-8 h-7 sm:h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 ring-2 ring-[#154734]/20 dark:ring-[#2a724f]/20 shadow-lg">
                       <Image
                         src={studentProfiles[currentExampleIndex].src}
                         alt={studentProfiles[currentExampleIndex].alt}
@@ -300,9 +317,9 @@ export default function Home() {
                         priority
                       />
                     </motion.div>
-                    <div className="flex-1 bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-3 sm:p-4 relative before:absolute before:w-2 before:h-2 before:bg-blue-50 dark:before:bg-blue-900/30 before:-left-1 before:top-4 before:rotate-45">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
-                      <p className="text-gray-800 dark:text-gray-200">{chatExamples[currentExampleIndex].userMessage}</p>
+                    <div className="flex-1 bg-blue-50 dark:bg-blue-900/30 rounded-xl p-2 sm:p-2.5 relative before:absolute before:w-2 before:h-2 before:bg-blue-50 dark:before:bg-blue-900/30 before:-left-1 before:top-4 before:rotate-45">
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-0.5">Today, 2:35 PM</p>
+                      <p className="text-gray-800 dark:text-gray-200 text-sm">{chatExamples[currentExampleIndex].userMessage}</p>
                     </div>
                   </div>
 
@@ -310,7 +327,7 @@ export default function Home() {
                   <div className="flex gap-3 flex-row-reverse">
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className="flex-shrink-0 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-lg ring-2 ring-gray-100 dark:ring-gray-700">
+                      className="flex-shrink-0 w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-lg ring-2 ring-gray-100 dark:ring-gray-700">
                       <Image
                         src="/images/logo.png"
                         alt="UniHealth AI"
@@ -320,15 +337,15 @@ export default function Home() {
                         priority
                       />
                     </motion.div>
-                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-3 sm:p-4 relative before:absolute before:w-2 before:h-2 before:bg-gray-50 dark:before:bg-gray-800/50 before:-right-1 before:top-4 before:rotate-45">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Today, 2:35 PM</p>
-                      <p className="text-gray-800 dark:text-gray-200 mb-3">{chatExamples[currentExampleIndex].aiResponse}</p>
+                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-2 sm:p-2.5 relative before:absolute before:w-2 before:h-2 before:bg-gray-50 dark:before:bg-gray-800/50 before:-right-1 before:top-4 before:rotate-45">
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-0.5">Today, 2:35 PM</p>
+                      <p className="text-gray-800 dark:text-gray-200 mb-2">{chatExamples[currentExampleIndex].aiResponse}</p>
                       <div className="space-y-2">
                         {chatExamples[currentExampleIndex].options.map((option, index) => (
                           <motion.div 
                             key={index} 
                             whileHover={{ scale: 1.02 }}
-                            className="bg-white dark:bg-gray-800 rounded-xl p-2.5 sm:p-3 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
+                            className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-2.5 shadow-sm relative overflow-hidden group hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all duration-200"
                           >
                             {typeof option.time === 'string' && option.time === 'Now' && (
                               <div className="absolute right-0 top-0 px-0.5 sm:px-1 py-0.5 rounded-bl-lg bg-green-50 dark:bg-green-900/30">
@@ -344,9 +361,9 @@ export default function Home() {
                               </div>
                             )}
                             <div className="pr-4 sm:pr-6">
-                              <p className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{option.name}</p>
-                              <div className="flex flex-col gap-2 mt-2">
-                                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                              <p className="font-medium text-gray-900 dark:text-white text-xs sm:text-sm">{option.name}</p>
+                              <div className="flex flex-row items-center gap-3 mt-1.5">
+                                <div className="flex items-center gap-2 text-[10px] sm:text-xs">
                                   <div className="flex items-center gap-1.5">
                                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
                                     <span className="text-gray-600 dark:text-gray-400">{option.distance} miles</span>

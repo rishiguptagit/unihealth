@@ -1,11 +1,12 @@
 "use client";
 
-import { FiSun, FiMoon, FiSend } from 'react-icons/fi';
+import { FiSun, FiMoon, FiSend, FiArrowLeft } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from '../components/ThemeProvider';
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Message {
   id: string;
@@ -15,7 +16,12 @@ interface Message {
 }
 
 export default function Chat() {
+  const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
+
+  const handleBack = () => {
+    router.back();
+  };
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -70,21 +76,32 @@ export default function Chat() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-2"
           >
-            <Link href="/" className="flex items-center gap-2">
-              <div className="relative w-8 h-8">
-                <Image
-                  src="/images/logo.png"
-                  alt="UniHealth Logo"
-                  width={32}
-                  height={32}
-                  className="object-contain w-full h-full"
-                  priority
-                />
+            <div className="flex items-center gap-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200"
+              >
+                <FiArrowLeft className="w-4 h-4" />
+                <span className="text-sm font-medium">Back</span>
+              </motion.button>
+              <div className="flex items-center gap-2">
+                <div className="relative w-8 h-8">
+                  <Image
+                    src="/images/logo.png"
+                    alt="UniHealth Logo"
+                    width={32}
+                    height={32}
+                    className="object-contain w-full h-full"
+                    priority
+                  />
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
+                  UniHealth
+                </h1>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
-                UniHealth
-              </h1>
-            </Link>
+            </div>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, x: 20 }}

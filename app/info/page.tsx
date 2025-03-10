@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useTheme } from '../components/ThemeProvider';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Insurance providers with their common plans
 type InsurancePlan = {
@@ -92,7 +93,12 @@ const insuranceData: InsurancePlan[] = [
 const insuranceProviders = insuranceData.map(item => item.provider);
 
 export default function InfoPage() {
+  const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
+
+  const handleBack = () => {
+    router.push('/poc');
+  };
   const [insurance, setInsurance] = useState('');
   const [insurancePlan, setInsurancePlan] = useState('');
   const [showInsuranceDropdown, setShowInsuranceDropdown] = useState(false);
@@ -280,15 +286,14 @@ export default function InfoPage() {
           className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-6 md:p-8"
         >
           <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-            <Link href="/">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-              >
-                <FiArrowLeft className="w-5 h-5" />
-              </motion.div>
-            </Link>
+            <motion.button
+              onClick={handleBack}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+            >
+              <FiArrowLeft className="w-5 h-5" />
+            </motion.button>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Your Information</h2>
           </div>
           
