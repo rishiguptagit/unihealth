@@ -205,7 +205,7 @@ export default function Home() {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-white leading-tight tracking-tight px-4 sm:px-0"
               >
-                Your health, in your hands
+                Your health, not in your hands
               </motion.h2>
               <motion.p 
                 initial={{ opacity: 0 }}
