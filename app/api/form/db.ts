@@ -24,7 +24,7 @@ export async function createFormSubmissionsTable() {
 
 export async function checkEmailExists(email: string) {
   try {
-    console.log("POSTGRES_URL:", process.env.POSTGRES_URL); // debug check
+    console.log("POSTGRES_URL:", process.env.POSTGRES_URL); // this is checking debug
 
     const result = await sql`
      SELECT EXISTS (
