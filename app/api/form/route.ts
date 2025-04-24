@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       : 'Failed to save form submission. Please try again.';
 
     return NextResponse.json(
-      { 
+      {
         error: userMessage,
         details: errorMessage
       },
