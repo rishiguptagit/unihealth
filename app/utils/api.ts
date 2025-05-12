@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'unihealth-production.up.railway.app';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://unihealth-production.up.railway.app';
 
 // First check if the server is accessible
 async function checkServerHealth() {
