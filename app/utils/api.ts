@@ -1,18 +1,48 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://unihealth-production.up.railway.app';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'unihealth-production.up.railway.app';
 
 // First check if the server is accessible
 async function checkServerHealth() {
   try {
     console.log('Checking server health at:', API_URL);
-    const response = await fetch(`${API_URL}/`);
+    
+    // Try a simple fetch without CORS mode first
+    const response = await fetch(`${API_URL}/`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    console.log('Health check response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`Server health check failed: ${response.status} ${response.statusText}`);
+      throw new Error(`Server returned status: ${response.status}`);
     }
-    const data = await response.json();
-    console.log('Server health check response:', data);
+
     return true;
   } catch (error) {
-    console.error('Server health check failed:', error);
+    console.error('Server health check failed:', {
+      error,
+      url: API_URL,
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+
+    // Try to check if the URL is accessible at all
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const testResponse = await fetch(API_URL, { 
+        signal: controller.signal,
+        mode: 'no-cors' // This will tell us if the server exists at all
+      });
+      
+      clearTimeout(timeoutId);
+      console.log('Server exists but might have CORS issues');
+    } catch (testError) {
+      console.error('Server might be down or unreachable');
+    }
+
     return false;
   }
 }
@@ -24,7 +54,7 @@ export async function chatWithAI(message: string) {
     // Check server health first
     const isHealthy = await checkServerHealth();
     if (!isHealthy) {
-      throw new Error('AI server is not accessible. Please try again later.');
+      throw new Error('Cannot connect to AI server. Please check if the server is running on Railway.');
     }
 
     console.log('Attempting to call AI API...');

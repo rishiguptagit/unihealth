@@ -5,8 +5,8 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv('.env.local')
+# Load environment variables from parent directory
+load_dotenv('../.env.local')
 
 # Configure the API
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
@@ -84,17 +84,19 @@ class ChatResponse(BaseModel):
 async def chat(request: ChatRequest):
     try:
         # Create the prompt with the user's message
-        prompt = f"""Based on the following list of available health center services, please help with this query:
+        prompt = f"""Based on the user's health concern, determine if Cal Poly Health Center can help and provide brief guidance for making an appointment.
 
-        Available Services:
+        Available Services at Cal Poly Health Center:
         {chr(10).join([f"- {service}" for service in cp_health_center_services])}
 
-        User Query: {request.message}
+        User's Health Concern: {request.message}
 
-        Please provide:
-        1. The most relevant service(s) from our list
-        2. Any limitations or special conditions to be aware of
-        3. Alternative services that might be helpful
+        IMPORTANT RULES:
+        1. First, state if Cal Poly Health Center can address their concern
+        2. If yes, tell them which specific service to select when making an appointment
+        3. Be brief, friendly, and practical (2-3 sentences max)
+        4. Example format: "Yes, Cal Poly Health Center can help with your headache. When making an appointment, select 'Headaches' as your reason for visit."
+        5. If their concern doesn't match any service, say "Cal Poly Health Center may not offer a specific service for this concern. Consider scheduling a general appointment or contacting them directly for guidance."
         """
 
         # Generate response
@@ -110,4 +112,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    uvicorn.run(app, host="0.0.0.0", port=8000)
