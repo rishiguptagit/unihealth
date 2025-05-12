@@ -46,6 +46,7 @@ export default function Chat() {
       timestamp: new Date()
     };
     setMessages(prev => [...prev, userMessage]);
+    setInputMessage(''); // Clear input after sending
 
     try {
       // Show loading state
@@ -72,18 +73,20 @@ export default function Chat() {
         return [...withoutLoading, botMessage];
       });
     } catch (error) {
-      // Handle error
+      // Handle error with more specific message
       setMessages(prev => {
         const withoutLoading = prev.filter(msg => msg.id !== 'loading');
         const errorMessage: Message = {
           id: Date.now().toString(),
           type: 'bot',
-          content: 'Sorry, I encountered an error. Please try again.',
+          content: error instanceof Error 
+            ? `Error: ${error.message}`
+            : 'Sorry, I encountered an error. Please try again.',
           timestamp: new Date()
         };
         return [...withoutLoading, errorMessage];
       });
-      console.error('Error getting AI response:', error);
+      console.error('Error in handleSendMessage:', error);
     }
   };
 
