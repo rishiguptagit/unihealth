@@ -7,6 +7,7 @@ import { useTheme } from '../components/ThemeProvider';
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { chatWithAI } from '../utils/api';
 
 interface Message {
   id: string;
@@ -34,30 +35,56 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+  const handleSendMessage = async (content: string) => {
+    if (!content.trim()) return;
 
-    // Add user message
+    // Add user message immediately
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputMessage,
+      content,
       timestamp: new Date()
     };
-
     setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
+    try {
+      // Show loading state
+      const loadingMessage: Message = {
+        id: 'loading',
         type: 'bot',
-        content: 'Thank you for your message. I understand you need assistance. Let me help connect you with the right healthcare resources.',
+        content: 'Thinking...',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, botMessage]);
-    }, 1000);
+      setMessages(prev => [...prev, loadingMessage]);
+
+      // Get AI response
+      const aiResponse = await chatWithAI(content);
+
+      // Remove loading message and add AI response
+      setMessages(prev => {
+        const withoutLoading = prev.filter(msg => msg.id !== 'loading');
+        const botMessage: Message = {
+          id: Date.now().toString(),
+          type: 'bot',
+          content: aiResponse,
+          timestamp: new Date()
+        };
+        return [...withoutLoading, botMessage];
+      });
+    } catch (error) {
+      // Handle error
+      setMessages(prev => {
+        const withoutLoading = prev.filter(msg => msg.id !== 'loading');
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          type: 'bot',
+          content: 'Sorry, I encountered an error. Please try again.',
+          timestamp: new Date()
+        };
+        return [...withoutLoading, errorMessage];
+      });
+      console.error('Error getting AI response:', error);
+    }
   };
 
   return (
@@ -167,14 +194,14 @@ export default function Chat() {
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputMessage)}
             placeholder="Type your message here..."
             className="flex-grow px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154734] dark:focus:ring-[#2a724f] focus:border-transparent transition-all duration-200"
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleSendMessage}
+            onClick={() => handleSendMessage(inputMessage)}
             className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-[#154734] hover:bg-[#1d5f45] text-white font-medium transition-colors duration-200 flex items-center gap-2 text-sm sm:text-base"
           >
             <FiSend className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
