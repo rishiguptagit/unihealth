@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.myunihealth.app';
+const API_URL = process.env.CHATAI_API_URL
 
 // First check if the server is accessible
 async function checkServerHealth() {
@@ -31,7 +31,11 @@ async function checkServerHealth() {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-      
+
+      if (!API_URL) {
+        throw new Error('API_URL is not defined');
+      }
+
       const testResponse = await fetch(API_URL, { 
         signal: controller.signal,
         mode: 'no-cors' // This will tell us if the server exists at all
