@@ -1,4 +1,4 @@
-const API_URL = process.env.CHATAI_API_URL
+const API_URL = process.env.NEXT_PUBLIC_CHATAI_API_URL
 
 // First check if the server is accessible
 async function checkServerHealth() {
