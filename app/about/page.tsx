@@ -33,8 +33,7 @@ export default function About() {
           <h1 className="text-4xl font-bold text-black dark:text-white mb-6">About UniHealth</h1>
           
           <p className="text-lg leading-relaxed">
-            UniHealth is a concept that was born out of BUS 310 at Cal Poly, San Luis Obispo. Our journey began at Cal Poly, where we witnessed firsthand the challenges students face in 
-            accessing and affording healthcare. We want to solve this problem through technology and innovation.
+            UniHealth is an AI powered healthcare platform that helps students find the best healthcare options for them.
           </p>
 
           <h2 className="text-2xl font-semibold text-black dark:text-white mt-8 mb-4">Our Mission</h2>
@@ -47,7 +46,7 @@ export default function About() {
           <h2 className="text-2xl font-semibold text-black dark:text-white mt-8 mb-4">How We Help</h2>
           <p className="text-lg leading-relaxed">
             Symptom to help. Our platform will use your symptoms to find the best healthcare options for you.
-            Find you the best doctor, lab, and pharmacy for your needs. We will take into account costs, geolocation, and availability when making your choices.
+            Find you the best doctor, lab, and pharmacy for your needs.
           </p>
         </div>
       </main>
