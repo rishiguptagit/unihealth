@@ -12,11 +12,7 @@ export default function Home() {
   const router = useRouter();
 
   const { darkMode, toggleDarkMode } = useTheme();
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
-
 
   const studentProfiles = [
     { src: "/images/student1.jpg", alt: "Female student with headache" },
@@ -74,52 +70,13 @@ export default function Home() {
     }
   ];
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailError('');
-
-    // Basic email validation
-    if (!email.trim()) {
-      setEmailError('Email is required');
-      return;
-    }
-
-    // Regex for email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Save email to local storage
-      localStorage.setItem('unihealth-email', email);
-
-      const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
-      if (!response.ok) {
-        throw new Error('Failed to check email');
-      }
-
-      const data = await response.json();
-      setIsSubmitting(false);
-
-      if (data.exists) {
-        // If email exists, redirect to POC page
-        router.push('/poc');
-      } else {
-        // If email doesn't exist, redirect to form page with email as query param
-        router.push(`/form?email=${encodeURIComponent(email)}`);
-      }
-    } catch (error) {
-      console.error('Error checking email:', error);
-      setEmailError('An error occurred. Please try again.');
-      setIsSubmitting(false);
-    }
+  const handleLogin = () => {
+    router.push('/login');
   };
 
-
+  const handleSignUp = () => {
+    router.push('/signup');
+  };
 
   // Save and load theme preference from local storage
   useEffect(() => {
@@ -135,13 +92,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${darkMode ? 'dark bg-gradient-to-b from-gray-900 to-gray-800' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-200 ${darkMode ? 'dark bg-black' : 'bg-white'}`}>
       {/* Navigation Bar */}
       <motion.nav 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-2 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
+        className="bg-white/80 dark:bg-black/80 backdrop-blur-md py-2 w-full sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800"
       >
         <div className="flex justify-between items-center max-w-6xl mx-auto px-3 sm:px-4">
           <motion.div 
@@ -170,17 +127,17 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-6"
           >
-            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200 text-sm font-medium">
+            <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200 text-sm font-medium">
               About
             </Link>
-            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200 text-sm font-medium">
+            <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200 text-sm font-medium">
               Contact
             </Link>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:text-[#154734] dark:hover:text-[#2a724f] transition-colors duration-200"
+              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
             >
               {darkMode ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
             </motion.button>
@@ -191,7 +148,7 @@ export default function Home() {
       {/* Split Screen */}
       <div className="flex-grow flex flex-col md:flex-row">
         {/* Left Half */}
-        <div className="w-full md:w-1/2 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center p-3 sm:p-4">
+        <div className="w-full md:w-1/2 bg-white dark:bg-black transition-colors duration-200 flex items-center justify-center p-3 sm:p-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,47 +179,35 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
               className="space-y-4">
-              <motion.form
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-3 mt-6 sm:mt-8 px-4 sm:px-0"
-                onSubmit={handleEmailSubmit}
-              >
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    // Clear error when user types
-                    if (emailError) setEmailError('');
-                  }}
-                  placeholder="Enter your personal email"
-                  className={`w-full px-4 py-3 rounded-xl border-2 ${emailError ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154734] dark:focus:ring-[#2a724f] focus:border-transparent transition-all duration-200`}
-                />
-                {emailError && (
-                  <p className="text-sm text-red-500 dark:text-red-400 mt-1">{emailError}</p>
-                )}
+              <div className="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 px-4 sm:px-0">
                 <motion.button
-                  type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting || !email.trim()}
-                  className="w-full py-3 bg-[#154734] dark:bg-[#2a724f] text-white rounded-xl hover:bg-[#1d5f45] dark:hover:bg-[#358f63] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  onClick={() => router.push('/login')}
+                  className="flex-1 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors duration-200 shadow-sm"
                 >
-                  {isSubmitting ? 'Checking...' : 'Continue'}
+                  Log In
                 </motion.button>
-              </motion.form>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => router.push('/signup')}
+                  className="flex-1 py-3 bg-white dark:bg-black text-black dark:text-white border-2 border-black dark:border-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors duration-200 shadow-sm"
+                >
+                  Sign Up
+                </motion.button>
+              </div>
             </motion.div>
           </motion.div>
         </div>
         
         {/* Right Half - Chat Example */}
-        <div className="w-full md:w-1/2 bg-gradient-to-bl from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 transition-colors duration-200 flex items-center justify-center p-3 sm:p-4 mt-4 md:mt-0">
+        <div className="w-full md:w-1/2 bg-gray-50 dark:bg-[#111111] transition-colors duration-200 flex items-center justify-center p-3 sm:p-4 mt-4 md:mt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden mx-2 sm:mx-4 md:mx-0"
+            className="w-full max-w-lg bg-white dark:bg-[#111111] rounded-xl shadow-lg dark:shadow-white/5 overflow-hidden mx-2 sm:mx-4 md:mx-0"
           >
             <div className="p-2 sm:p-2.5 space-y-1.5 relative">
               {/* Navigation Controls */}

@@ -8,11 +8,11 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../components/ThemeProvider';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
-export default function Info() {
+export default function Login() {
   const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,25 +22,22 @@ export default function Info() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/info', {
-        method: 'PATCH',
+      // TODO: Implement actual login logic here
+      const response = await fetch('/api/login', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          email: localStorage.getItem('email'), // We'll need to set this during signup/login
-          firstName,
-          lastName
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update information');
+        throw new Error('Invalid credentials');
       }
 
       router.push('/chat');
     } catch (err) {
-      setError('Failed to save information. Please try again.');
+      setError('Invalid email or password');
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +79,7 @@ export default function Info() {
         </div>
       </motion.nav>
 
-      {/* Info Form */}
+      {/* Login Form */}
       <div className="flex-grow flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -92,48 +89,50 @@ export default function Info() {
         >
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Tell us about yourself
+              Welcome back
             </h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              We'll use this to personalize your experience
+              Sign in to your account
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  First name
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Email address
                 </label>
                 <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
                   required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className={`mt-1 block w-full px-4 py-3 rounded-xl border-2 ${
                     error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-800'
                   } bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your first name"
+                  placeholder="Enter your email"
                 />
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Last name
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Password
                 </label>
                 <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
                   required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className={`mt-1 block w-full px-4 py-3 rounded-xl border-2 ${
                     error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-800'
                   } bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your last name"
+                  placeholder="Enter your password"
                 />
               </div>
             </div>
@@ -151,8 +150,20 @@ export default function Info() {
               disabled={isLoading}
               className="w-full py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
-              {isLoading ? 'Saving...' : 'Continue'}
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </motion.button>
+
+            <div className="text-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400">
+                Don't have an account?{' '}
+              </span>
+              <Link
+                href="/signup"
+                className="font-medium text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                Sign up
+              </Link>
+            </div>
           </form>
         </motion.div>
       </div>

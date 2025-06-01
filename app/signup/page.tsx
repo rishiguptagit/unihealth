@@ -7,40 +7,53 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTheme } from '../components/ThemeProvider';
 import { FiSun, FiMoon } from 'react-icons/fi';
+import bcrypt from 'bcryptjs';
 
-export default function Info() {
+export default function SignUp() {
   const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/info', {
-        method: 'PATCH',
+      // Hash password before sending
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      const response = await fetch('/api/signup', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          email: localStorage.getItem('email'), // We'll need to set this during signup/login
-          firstName,
-          lastName
+          email, 
+          password: hashedPassword 
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update information');
+        const error = await response.text();
+        throw new Error(error);
       }
 
-      router.push('/chat');
+      // On successful signup, redirect to dashboard or home
+      localStorage.setItem('email', email);
+      router.push('/info');
     } catch (err) {
-      setError('Failed to save information. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +95,7 @@ export default function Info() {
         </div>
       </motion.nav>
 
-      {/* Info Form */}
+      {/* Sign Up Form */}
       <div className="flex-grow flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -92,48 +105,69 @@ export default function Info() {
         >
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Tell us about yourself
+              Create your account
             </h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              We'll use this to personalize your experience
+              Join UniHealth today
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  First name
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Email address
                 </label>
                 <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
                   required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className={`mt-1 block w-full px-4 py-3 rounded-xl border-2 ${
                     error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-800'
                   } bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your first name"
+                  placeholder="Enter your email"
                 />
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Last name
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Password
                 </label>
                 <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
                   required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className={`mt-1 block w-full px-4 py-3 rounded-xl border-2 ${
                     error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-800'
                   } bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your last name"
+                  placeholder="Create a password"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Confirm password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`mt-1 block w-full px-4 py-3 rounded-xl border-2 ${
+                    error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-800'
+                  } bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200`}
+                  placeholder="Confirm your password"
                 />
               </div>
             </div>
@@ -151,8 +185,20 @@ export default function Info() {
               disabled={isLoading}
               className="w-full py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
-              {isLoading ? 'Saving...' : 'Continue'}
+              {isLoading ? 'Creating account...' : 'Create account'}
             </motion.button>
+
+            <div className="text-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400">
+                Already have an account?{' '}
+              </span>
+              <Link
+                href="/login"
+                className="font-medium text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                Log in
+              </Link>
+            </div>
           </form>
         </motion.div>
       </div>
